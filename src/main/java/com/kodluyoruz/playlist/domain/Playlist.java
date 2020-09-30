@@ -50,6 +50,7 @@ public class Playlist {
 
     public void addTrack(Track track) {
         this.tracks.add(track);
+        setTrackCount(this.tracks.size());
     }
 
     public void deleteTrack(String id) {
@@ -64,5 +65,6 @@ public class Playlist {
             throw new NotFoundException("Track not found");
         }
         tracks.remove(result);
+        setTrackCount(this.tracks.size());
     }
 }
