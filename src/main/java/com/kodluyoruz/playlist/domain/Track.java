@@ -15,7 +15,7 @@ public class Track {
     private String length;
     private String artist;
 
-    public Track(){
+    public Track() {
         this.id = UUID.randomUUID().toString();
     }
 

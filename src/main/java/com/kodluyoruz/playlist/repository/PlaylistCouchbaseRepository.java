@@ -76,20 +76,14 @@ public class PlaylistCouchbaseRepository implements PlaylistRepository {
                 playlistId,
                 Collections.singletonList(get("tracks"))
         );
-        return result.contentAs(0, new TypeRef<List<Track>>() {});
+        return result.contentAs(0, new TypeRef<List<Track>>() {
+        });
     }
 
     @Override
     public void deleteTrack(String playlistId, String trackId) {
         List<Track> tracks = getTracks(playlistId);
-        Track result = null;
-        for (Track track : tracks) {
-            if (track.getId().equals(trackId)) {
-                result = track;
-                break;
-            }
-        }
-        tracks.remove(result);
+        tracks.removeIf(track -> track.getId().equals(trackId));
         playlistCollection.mutateIn(playlistId, Arrays.asList(
                 replace("tracks", tracks),
                 decrement("trackCount", 1)
