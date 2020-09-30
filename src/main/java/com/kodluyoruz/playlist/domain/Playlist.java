@@ -1,6 +1,5 @@
 package com.kodluyoruz.playlist.domain;
 
-import com.kodluyoruz.playlist.exception.NotFoundException;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -46,25 +45,5 @@ public class Playlist {
         this.tracks = tracks;
         this.trackCount = trackCount;
         this.userId = userId;
-    }
-
-    public void addTrack(Track track) {
-        this.tracks.add(track);
-        setTrackCount(this.tracks.size());
-    }
-
-    public void deleteTrack(String id) {
-        Track result = null;
-        for (Track track : this.tracks) {
-            if (track.getId().equals(id)) {
-                result = track;
-                break;
-            }
-        }
-        if (result == null) {
-            throw new NotFoundException("Track not found");
-        }
-        tracks.remove(result);
-        setTrackCount(this.tracks.size());
     }
 }

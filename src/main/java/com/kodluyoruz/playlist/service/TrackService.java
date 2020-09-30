@@ -1,6 +1,5 @@
 package com.kodluyoruz.playlist.service;
 
-import com.kodluyoruz.playlist.domain.Playlist;
 import com.kodluyoruz.playlist.domain.Track;
 import com.kodluyoruz.playlist.repository.PlaylistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,16 +16,11 @@ public class TrackService {
     }
 
     public String addTrackToPlaylist(String playlistId, Track track) {
-        Playlist playlist = playlistRepository.findById(playlistId);
-        playlist.addTrack(track);
-        playlistRepository.update(playlist);
-        return track.getId();
+        return playlistRepository.addTrack(playlistId,track);
     }
 
-    public void deleteTrackFromPlaylist(String playlistId,String trackId){
-        Playlist playlist = playlistRepository.findById(playlistId);
-        playlist.deleteTrack(trackId);
-        playlistRepository.update(playlist);
+    public void deleteTrackFromPlaylist(String playlistId, String trackId) {
+        playlistRepository.deleteTrack(playlistId, trackId);
     }
 
 }
