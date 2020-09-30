@@ -1,10 +1,12 @@
 package com.kodluyoruz.playlist.repository;
 
+import com.couchbase.client.core.deps.com.fasterxml.jackson.databind.ObjectMapper;
 import com.couchbase.client.java.Cluster;
 import com.couchbase.client.java.Collection;
 
 import static com.couchbase.client.java.kv.LookupInSpec.get;
 
+import com.couchbase.client.java.codec.TypeRef;
 import com.couchbase.client.java.kv.GetResult;
 import com.couchbase.client.java.kv.LookupInResult;
 import com.couchbase.client.java.query.QueryResult;
@@ -12,10 +14,8 @@ import com.kodluyoruz.playlist.domain.Playlist;
 import com.kodluyoruz.playlist.domain.Track;
 import org.springframework.stereotype.Repository;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
+import javax.swing.tree.RowMapper;
+import java.util.*;
 
 import static com.couchbase.client.java.kv.MutateInSpec.*;
 
@@ -71,27 +71,27 @@ public class PlaylistCouchbaseRepository implements PlaylistRepository {
     }
 
     @Override
-    public List getTracks(String playlistId) {
+    public List<Track> getTracks(String playlistId) {
         LookupInResult result = playlistCollection.lookupIn(
                 playlistId,
                 Collections.singletonList(get("tracks"))
         );
-        return result.contentAs(0, List.class);
+        return result.contentAs(0, new TypeRef<List<Track>>() {});
     }
 
     @Override
     public void deleteTrack(String playlistId, String trackId) {
-        List<LinkedHashMap> tracks = getTracks(playlistId);
-        LinkedHashMap result = null;
-        for (LinkedHashMap track : tracks) {
-            if (track.get("id").equals(trackId)) {
+        List<Track> tracks = getTracks(playlistId);
+        Track result = null;
+        for (Track track : tracks) {
+            if (track.getId().equals(trackId)) {
                 result = track;
                 break;
             }
         }
         tracks.remove(result);
         playlistCollection.mutateIn(playlistId, Arrays.asList(
-                upsert("tracks", Collections.singletonList(tracks)),
+                replace("tracks", tracks),
                 decrement("trackCount", 1)
         ));
     }

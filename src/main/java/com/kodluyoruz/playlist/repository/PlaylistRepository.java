@@ -19,7 +19,7 @@ public interface PlaylistRepository {
 
     public String addTrack(String playlistId, Track track);
 
-    public List getTracks(String playlistId);
+    public List<Track> getTracks(String playlistId);
 
     public void deleteTrack(String playlistId,String trackId);
 }
